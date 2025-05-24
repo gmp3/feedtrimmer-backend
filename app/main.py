@@ -34,7 +34,7 @@ class UploadRequest(BaseModel):
 
 @app.get("/")
 async def root():
-    return RedirectResponse(url="https://gmp3.github.io/podtrimmer", status_code=403)
+    return RedirectResponse(url="https://gmp3.github.io/podtrimmer", status_code=301)
 
 @app.get("/healthz")
 async def healthz():
