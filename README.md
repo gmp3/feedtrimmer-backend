@@ -13,6 +13,8 @@ This project provides a FastAPI backend for uploading and storing podcast RSS fe
 - Storage of feeds in Supabase Storage bucket (`podcast-feeds`)
 - Public URL returned for each uploaded feed
 - API key authentication for secure uploads
+- Health check endpoint
+- Root endpoint redirects with 403
 
 ## Requirements
 
@@ -46,3 +48,50 @@ Start the server with:
 ```sh
 uvicorn app.main:app --reload
 ```
+
+The API will be available at `http://localhost:8000`.
+
+## API Usage
+
+### Root Endpoint
+
+**GET /**  
+Redirects to [https://gmp3.github.io/podtrimmer](https://gmp3.github.io/podtrimmer) with a 403 status.
+
+### Health Check
+
+**GET /healthz**  
+Returns `OK` with status 200.
+
+### Upload Feed
+
+**POST /upload**
+
+**Headers:**
+- `x-api-key: your-secret-api-key`
+
+**Body:**
+```json
+{
+  "fileName": "example.xml",
+  "xmlContent": "<rss>...</rss>"
+}
+```
+
+**Response:**
+```json
+{
+  "url": "https://your-supabase-url/storage/v1/s3/object/public/podcast-feeds/example.xml"
+}
+```
+
+**Note:**  
+Each upload request is logged with the client IP, file name, and request headers.
+
+## Deployment
+
+This project is ready to deploy on [Render](https://render.com/) using the included `Dockerfile` and `render.yaml`.
+
+## License
+
+MIT License

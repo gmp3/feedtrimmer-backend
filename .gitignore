@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Virtual environments
+.env/
+.venv/
+venv/
+ENV/
+env/
+
+# Environment variables
+.env
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# Test and coverage
+.coverage
+htmlcov/
+*.log
+
+# PyInstaller
+dist/
+build/
+*.spec
+
+# Misc
+*.sqlite3
+*.db

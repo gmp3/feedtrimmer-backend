@@ -5,12 +5,16 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from supabase import create_client, Client
 from dotenv import load_dotenv
+from fastapi.responses import RedirectResponse, PlainTextResponse
 
 load_dotenv()
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
+print (f"SUPABASE_URL: {SUPABASE_URL}")
 SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE")
+print (f"SUPABASE_KEY: {SUPABASE_KEY}")
 API_KEY = os.getenv("API_KEY")
+print (f"API_KEY: {API_KEY}")
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
@@ -28,8 +32,19 @@ class UploadRequest(BaseModel):
     fileName: str
     xmlContent: str
 
+@app.get("/")
+async def root():
+    return RedirectResponse(url="https://gmp3.github.io/podtrimmer", status_code=403)
+
+@app.get("/healthz")
+async def healthz():
+    return PlainTextResponse("OK", status_code=200)
+
 @app.post("/upload")
 async def upload_feed(req: Request, body: UploadRequest):
+    # Log request details
+    print(f"[UPLOAD] Request from {req.client.host} - fileName: {body.fileName}, headers: {dict(req.headers)}")
+
     if req.headers.get("x-api-key") != API_KEY:
         raise HTTPException(status_code=401, detail="Invalid API key")
 
@@ -45,14 +60,14 @@ async def upload_feed(req: Request, body: UploadRequest):
         file_name = body.fileName
 
         result = supabase.storage.from_("podcast-feeds").upload(file_name, data, {
-            "content-type": "application/rss+xml",
+            "content-type": "text/xml",
             "upsert": True
         })
 
         if result.get("error"):
             raise Exception(result["error"]["message"])
 
-        public_url = f"{SUPABASE_URL}/storage/v1/object/public/podcast-feeds/{file_name}"
+        public_url = f"{SUPABASE_URL}/storage/v1/s3/object/public/podcast-feeds/{file_name}"
         return {"url": public_url}
 
     except Exception as e:
