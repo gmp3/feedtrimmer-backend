@@ -10,11 +10,11 @@ from fastapi.responses import RedirectResponse, PlainTextResponse
 load_dotenv()
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
-print (f"SUPABASE_URL: {SUPABASE_URL}")
+# print (f"SUPABASE_URL: {SUPABASE_URL}")
 SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE")
-print (f"SUPABASE_KEY: {SUPABASE_KEY}")
+# print (f"SUPABASE_KEY: {SUPABASE_KEY}")
 API_KEY = os.getenv("API_KEY")
-print (f"API_KEY: {API_KEY}")
+# print (f"API_KEY: {API_KEY}")
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
@@ -53,6 +53,8 @@ async def upload_feed(req: Request, body: UploadRequest):
         try:
             ET.fromstring(body.xmlContent)
         except ET.ParseError as e:
+            print(f"[UPLOAD][ERROR] XML ParseError for file '{body.fileName}': {str(e)}")
+            print(f"[UPLOAD][ERROR] XML Content: {body.xmlContent}")
             raise HTTPException(status_code=400, detail=f"Invalid XML: {str(e)}")
 
         # Upload to Supabase
@@ -65,10 +67,16 @@ async def upload_feed(req: Request, body: UploadRequest):
         })
 
         if result.get("error"):
+            print(f"[UPLOAD][ERROR] Supabase upload error for file '{file_name}': {result['error']}")
+            print(f"[UPLOAD][ERROR] Request headers: {dict(req.headers)}")
+            print(f"[UPLOAD][ERROR] XML Content: {body.xmlContent}")
             raise Exception(result["error"]["message"])
 
         public_url = f"{SUPABASE_URL}/storage/v1/s3/object/public/podcast-feeds/{file_name}"
         return {"url": public_url}
 
     except Exception as e:
+        print(f"[UPLOAD][ERROR] Exception for file '{body.fileName}': {str(e)}")
+        print(f"[UPLOAD][ERROR] Request headers: {dict(req.headers)}")
+        print(f"[UPLOAD][ERROR] XML Content: {body.xmlContent}")
         raise HTTPException(status_code=500, detail=str(e))
