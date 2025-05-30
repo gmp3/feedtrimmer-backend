@@ -1,6 +1,6 @@
-# podtrimmer-backend
+# feedtrimmer-backend
 
-Backend API Server for Podtrimmer App
+Backend API Server for FeedTrimmer App
 
 ## Overview
 
@@ -25,8 +25,8 @@ This project provides a FastAPI backend for uploading and storing podcast RSS fe
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/yourusername/podtrimmer-backend.git
-    cd podtrimmer-backend
+    git clone https://github.com/yourusername/feedtrimmer-backend.git
+    cd feedtrimmer-backend
     ```
 
 2. Install dependencies:
@@ -56,7 +56,7 @@ The API will be available at `http://localhost:8000`.
 ### Root Endpoint
 
 **GET /**  
-Redirects to [https://gmp3.github.io/podtrimmer](https://gmp3.github.io/podtrimmer) with a 403 status.
+Redirects to [https://gmp3.github.io/feedtrimmer](https://gmp3.github.io/feedtrimmer) with a 403 status.
 
 ### Health Check
 
