@@ -12,7 +12,6 @@ This project provides a FastAPI backend for uploading and storing podcast RSS fe
 - XML validation before upload
 - Storage of feeds in Supabase Storage bucket (`podcast-feeds`)
 - Public URL returned for each uploaded feed
-- API key authentication for secure uploads
 - Health check endpoint
 - Root endpoint redirects with 403
 
@@ -38,7 +37,6 @@ This project provides a FastAPI backend for uploading and storing podcast RSS fe
     ```
     SUPABASE_URL=your-supabase-url
     SUPABASE_SERVICE_ROLE=your-service-role-key
-    API_KEY=your-secret-api-key
     ```
 
 ## Running Locally
@@ -67,8 +65,6 @@ Returns `OK` with status 200.
 
 **POST /upload**
 
-**Headers:**
-- `x-api-key: your-secret-api-key`
 
 **Body:**
 ```json

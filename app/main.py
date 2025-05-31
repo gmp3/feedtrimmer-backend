@@ -62,7 +62,7 @@ async def upload_feed(req: Request):
         file_name: str = f"{''.join(random.choices(string.ascii_lowercase + string.digits, k=8))}.xml"
         upload_to_supabase(file_name, data_et.encode('utf-8'), req)
         public_url = f"{SUPABASE_URL}/storage/v1/object/public/feedtrimmer/{file_name}"
-        return public_url
+        return {"public_url": public_url}
 
     except Exception as e:
         print(f"[UPLOAD][ERROR] Exception during upload: {str(e)}")

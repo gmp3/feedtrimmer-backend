@@ -9,5 +9,3 @@ services:
         value: https://your-project-id.supabase.co
       - key: SUPABASE_SERVICE_ROLE
         value: your-service-role-key
-      - key: API_KEY
-        value: your-secret-api-key
