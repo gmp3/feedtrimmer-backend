@@ -101,3 +101,24 @@ def shorten_url(long_url: str) -> str:
         return response.json()["data"]["tiny_url"]
     else:
         raise Exception(f"Shorten URL failed: {response.text}")
+
+@app.get("/applepodcasts")
+async def get_apple_podcast_feed_url(id: str):
+    """
+    Fetches the feedUrl for a podcast from the iTunes Search API using the Apple Podcast ID.
+    """
+    try:
+        response = requests.get(
+            "https://itunes.apple.com/lookup",
+            params={"id": id}
+        )
+        response.raise_for_status()
+        data = response.json()
+        if data.get("resultCount", 0) == 0 or not data.get("results"):
+            raise HTTPException(status_code=404, detail="Podcast not found")
+        feed_url = data["results"][0].get("feedUrl")
+        if not feed_url:
+            raise HTTPException(status_code=404, detail="feedUrl not found for this podcast")
+        return {"feedUrl": feed_url}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error fetching podcast: {str(e)}")
